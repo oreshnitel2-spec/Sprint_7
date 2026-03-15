@@ -26,11 +26,7 @@ class TestCreateCourier:
         password = courier_data[1]
         first_name = courier_data[2]
 
-        payload = {
-            "login": login,
-            "password": password,
-            "firstName": first_name
-        }
+        payload = build_courier_payload(login, password, first_name)
         with allure.step(f"Пробуем создать курьера с уже существующими данными: {payload}"):
             response = requests.post(urls.CREATE_COURIER, data=payload)
         with allure.step("Проверяем, что ответ содержит ошибку 409 и сообщение"):    
