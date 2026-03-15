@@ -38,15 +38,13 @@ class TestLoginCourier:
     def test_login_with_wrong_credentials_is_not_success(self, courier, field):
         courier_data, _ = courier
 
-        login = courier_data[0]
-        password = courier_data[1]
-
-        if field == "login":
-            login = generate_random_string(10)
-        else:
-            password = generate_random_string(10)
+        payload = {
+        "login": courier_data[0],
+        "password": courier_data[1]
+        }
+        payload[field] = generate_random_string(10)
         with allure.step(f"Пробуем авторизоваться с неверным полем {field}"):
-            response = login_courier(login, password)
+            response = requests.post(urls.LOGIN_COURIER, data=payload)
         with allure.step("Проверяем код и сообщение об ошибке"):
             assert response.status_code == 404
             assert "message" in response.json()
