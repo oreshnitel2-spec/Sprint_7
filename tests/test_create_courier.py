@@ -31,7 +31,7 @@ class TestCreateCourier:
             response = requests.post(urls.CREATE_COURIER, data=payload)
         with allure.step("Проверяем, что ответ содержит ошибку 409 и сообщение"):    
             assert response.status_code == 409, "Повторный курьер был создан"
-            assert "message" in response.json(), "В ответе нет поля message"
+            assert "Этот логин уже используется" in response.json().get("message")
 
     @allure.feature("Cоздание курьера")
     @pytest.mark.parametrize("missing_field", ["login", "password"])
@@ -45,7 +45,7 @@ class TestCreateCourier:
             response = requests.post(urls.CREATE_COURIER, data=payload)
         with allure.step("Проверяем, что ответ содержит ошибку 400 и сообщение"):
             assert response.status_code == 400, f"Отсутствие поля {missing_field} не дало ошибку"
-            assert "message" in response.json()
+            assert response.json().get("message") == "Недостаточно данных для создания учетной записи"
 
     @allure.feature("Cоздание курьера")
     @allure.title("Проверка корректного ответа при успешном создании курьера")

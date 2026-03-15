@@ -30,7 +30,7 @@ class TestLoginCourier:
             response = login_courier(login, password)
         with allure.step("Проверяем код и сообщение об ошибке"):
             assert response.status_code == 404
-            assert "message" in response.json()
+            assert response.json().get("message") == "Учетная запись не найдена"
 
     @allure.feature("Авторизация курьера")
     @pytest.mark.parametrize("field", ["login", "password"])
@@ -47,7 +47,7 @@ class TestLoginCourier:
             response = requests.post(urls.LOGIN_COURIER, data=payload)
         with allure.step("Проверяем код и сообщение об ошибке"):
             assert response.status_code == 404
-            assert "message" in response.json()
+            assert response.json().get("message") == "Учетная запись не найдена"
 
     @allure.feature("Авторизация курьера")
     @pytest.mark.parametrize("missing_field", ["login", "password"])
@@ -64,4 +64,4 @@ class TestLoginCourier:
             response = requests.post(urls.LOGIN_COURIER, data=payload)
         with allure.step("Проверяем код и сообщение об ошибке"):
             assert response.status_code == 400
-            assert "message" in response.json()
+            assert response.json().get("message") == "Недостаточно данных для входа"
